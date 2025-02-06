@@ -6,13 +6,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Models\Task;
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function get(): JsonResponse
     {
         return response()->json([
-            'data' => Task::all(),
+            'data' => Auth::user()->tasks,
         ], Response::HTTP_OK);
     }
     public function store(StoreTaskRequest $request): JsonResponse
@@ -24,10 +26,12 @@ class TaskController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function update(): JsonResponse
+    public function update(Task $task, UpdateTaskRequest $request): JsonResponse
     {
+        $task->update($request->only(['title', 'description']));
+
         return response()->json([
-            
+            'message' => 'Tarefa atualizada com sucesso.',
         ], Response::HTTP_OK);
     }
 

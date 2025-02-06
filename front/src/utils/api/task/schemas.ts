@@ -17,13 +17,10 @@ export const get = async (): Promise<ResponseData<Task[]>> => {
 export const update = async (
 	id: string,
 	title: string,
-	completed: boolean,
 	description?: string
 ): Promise<ResponseData<{ data: Task }>> => {
-	return await fetchAPI<{ data: Task }>('tasks', 'PUT', {
-		id,
+	return await fetchAPI<{ data: Task }>(`tasks/${id}`, 'PUT', {
 		title,
-		completed,
 		description,
 	});
 };

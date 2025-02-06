@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import ButtonWithLoading from "@/components/ButtonWithLoading";
 import RedirectSession from "@/components/auth/RedirectSection";
 import { Errors } from "@/utils/types/GenericErrorType";
+import Cookie from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [email, setEmail] = useState<string>("");
@@ -18,6 +20,7 @@ export default function Register() {
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const validateForm = () => {
     const validationResult = registrationSchema.safeParse({
@@ -50,10 +53,12 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const { message, errors } = await register(email, name, password, passwordConfirmation);
+      const { message, errors, data } = await register(email, name, password, passwordConfirmation);
 
       if (message && !errors) {
+        Cookie.set('token', data?.token);
         toast.success(message);
+        router.push('/');
       } else if (errors?.global) {
         toast.error(errors.global);
         setErrors(errors);

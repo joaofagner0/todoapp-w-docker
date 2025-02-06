@@ -21,7 +21,7 @@ Route::prefix('/tasks')
         function () {
             Route::get('/', [TaskController::class, 'get']);
             Route::post('/', [TaskController::class, 'store']);
-            Route::put('/', [TaskController::class, 'update']);
+            Route::put('/{task}', [TaskController::class, 'update']);
             Route::delete('/{task}', [TaskController::class, 'destroy']);
         }
     );

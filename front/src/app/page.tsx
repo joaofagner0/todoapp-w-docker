@@ -6,8 +6,9 @@ import { get, destroy } from "@/utils/api/task/schemas";
 import { Task } from "@/utils/api/task/interfaces";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { LogOutIcon } from "lucide-react";
+import { Edit, LogOutIcon } from "lucide-react";
 import ToastWrapper from "@/components/ToastContainer";
+import TaskModal from "@/components/TaskModal";
 
 export default function TodoPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -71,7 +72,7 @@ export default function TodoPage() {
     e.preventDefault();
     if (draggedTask) {
       try {
-        await destroy(draggedTask.id)
+        await destroy(draggedTask?.id ?? "")
         setTasks((prev) => prev.filter((task) => task.id !== draggedTask.id));
         setDraggedTask(null);
         toast.success("Tarefa excluída com sucesso!");
@@ -96,7 +97,11 @@ export default function TodoPage() {
   };
 
   const handleCreateTask = () => {
-    router.push("/create-task");
+    setModalTask({});
+  };
+
+  const handleEditTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
   };
 
   return (
@@ -120,7 +125,7 @@ export default function TodoPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto pt-20">
+      <div className="max-w-[90%] mx-auto pt-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading
             ?
@@ -149,12 +154,14 @@ export default function TodoPage() {
                   <div className="flex items-center justify-center h-full border-2 border-dashed border-gray-600 rounded-xl"></div>
                 ) : (
                   <div className="p-4 h-full flex flex-col justify-between">
-                    <h2
-                      className={`text-xl font-semibold ${task.completed ? "line-through text-gray-400" : "text-white"
-                        }`}
-                    >
-                      {task.title}
-                    </h2>
+                    <div className="flex justify-between">
+                      <h2 className="text-xl font-semibold text-white">
+                        {task.title}
+                      </h2>
+                      <button onClick={handleEditTask}>
+                        <Edit />
+                      </button>
+                    </div>
                     <div className="border-b border-gray-600 my-2"></div>
                     <p className="text-gray-300 line-clamp-3 flex-grow">{task.description}</p>
                   </div>
@@ -175,28 +182,7 @@ export default function TodoPage() {
       </div>
 
       {modalTask && (
-        <div
-          onClick={closeModal}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 transition-opacity duration-300"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full p-8 relative animate-modalIn"
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-300 text-3xl leading-none"
-            >
-              &times;
-            </button>
-            <h2 className="text-2xl font-semibold text-white mb-4 border-b pb-2">
-              {modalTask.title}
-            </h2>
-            <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
-              {modalTask.description}
-            </p>
-          </div>
-        </div>
+        <TaskModal task={modalTask} closeModal={closeModal} fetchTasks={fetchTasks} />
       )}
     </div>
   );

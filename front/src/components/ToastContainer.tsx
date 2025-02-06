@@ -18,13 +18,14 @@ const ToastWrapper = () => {
         marginTop: "20px",
       }}
       toastStyle={{
-        backgroundColor: "#f9f9f9",
-        color: "#333",
+        backgroundColor: "#1e2735",
+        color: "#c5c9d1",
         borderRadius: "8px",
         padding: "12px 20px",
         boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
         fontSize: "14px",
       }}
+      closeButton={false}
     />
   );
 };
