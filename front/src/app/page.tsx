@@ -107,7 +107,7 @@ export default function TodoPage() {
   return (
     <div className="h-screen bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 px-4 py-8 overflow-hidden">
       <ToastWrapper />
-      <header className="fixed top-0 left-0 w-full bg-black shadow-lg py-4 px-6 flex justify-between items-center z-50">
+      <header className="fixed top-0 left-0 w-full bg-gray-900 shadow-lg py-4 px-6 flex justify-between items-center z-50">
         <h1 className="text-3xl font-semibold text-white">TodoApp</h1>
         <div className="flex items-center gap-4">
           <button
